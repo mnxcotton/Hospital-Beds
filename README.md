@@ -4,7 +4,7 @@ Examining hospital bed management with machine-learning methods. I will explore 
 ## Background: 
 Many hospitals are often dealing with finding enough hospital beds for the flux of patients who are admitted into the institution. According to online articles from NPR and JAMA Network, many hospitals in the U.S. in recent years face hospital bed shortage. A recent example that magnified this issue is from the COVID-19 pandemic. 
 
-## Description of Data Set
+## Description of Data Sets
 The dataset is based on a simulation of medium-sized hospital. Contains information on patient admission, staffing, bed availability, and hospital services. The dataset consists of 4 different .csv files.
 
 ### patients.csv 
