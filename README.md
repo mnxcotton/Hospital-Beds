@@ -6,8 +6,9 @@ Many hospitals are often dealing with finding enough hospital beds for the flux 
 ## Sample Size:
 
 
-## Research Questions:
-
+## Research Objectives:
+- Explore the selected datasets containing information on hospital staffing and bedding operations. 
+- Find insights on hospital bed management.
 
 ## Methods
 - Train-test split and cross-validation
