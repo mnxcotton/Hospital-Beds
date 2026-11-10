@@ -1,0 +1,97 @@
+#------------------------------------------------------------
+# EXAMPLE: creating new datasets
+#------------------------------------------------------------
+
+# merge datasets
+weekly_data = services.merge(
+    staff_weekly,
+    on=['week', 'service'],
+    how='left'
+)
+
+weekly_data['present'] = weekly_data['present'].fillna(0)
+
+# pivot the merged data with numeric columns for machine learning models
+staff_pivot = (
+    weekly_data
+    .pivot_table(
+        index=['week', 'service'],
+        columns='role',
+        values='present',
+        aggfunc='sum',
+        fill_value=0
+    )
+    .reset_index()
+)
+
+# merge data with pivot form
+weekly_data = weekly_data.merge(
+    staff_pivot,
+    on=['week', 'service'],
+    how='left'
+).fillna(0)
+
+# features
+x = weekly_data.drop(columns = ['available_beds', 'week', 'service'])
+
+for col in x.columns: # change strings in x into 0
+    if x[col].dtype == 'object':
+      x[col] = x[col].astype(str)
+      x[col] = x[col].str.replace('none', '0', case = False)
+      x[col] = x[col].str.replace(' ', '0', case = False)
+      x[col] = pd.to_numeric(x[col], errors = 'coerce')
+
+x = x.fillna(0)
+
+# target
+y = weekly_data['available_beds']
+
+#------------------------------------------------------------
+# EXAMPLE: plot visualizations
+#------------------------------------------------------------
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+features_scaled = StandardScaler().fit_transform(x)
+pca = PCA(n_components = 2)
+principal_components = pca.fit_transform(features_scaled)
+principal_df = pd.DataFrame(data = principal_components, columns = ['PC1', 'PC2'])
+
+print(principal_df.head())
+
+plt.figure(figsize = (10, 6))
+plt.scatter(principal_df['PC1'], principal_df['PC2'], alpha = 0.5)
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.title('PCA of Weekly Hospital Activity')
+plt.show()
+
+from sklearn.cluster import KMeans
+
+patient_features = patients[['age', 'satisfaction']]
+scaled_features = StandardScaler().fit_transform(patient_features)
+
+kmeans = KMeans(n_clusters = 3, random_state = 62)
+clusters = kmeans.fit_predict(scaled_features)
+
+patients['clusters'] = clusters
+
+plt.figure(figsize = (10, 6))
+
+plt.scatter(
+    patients['age'],
+    patients['satisfaction'],
+    c = patients['clusters'],
+    cmap = 'viridis',
+    alpha = 0.7
+    )
+
+plt.xlabel('Age')
+plt.ylabel('Satisfaction')
+plt.title('K-Means Clustering of Patients')
+
+cbar = plt.colorbar()
+cbar.set_label('Cluster')
+
+plt.show()
