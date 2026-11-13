@@ -15,9 +15,6 @@ The datasets are from Kaggle’s [Hospital Beds Management dataset](https://www.
 
 The patient arrival and departure fields were converted to datetime values to calculate length of stay. Staff schedules were aggregated by week, service, and job position, then joined with weekly service data. The resulting data was pivoted to create numeric staffing features; missing values were filled with zero. The predictive data was split into training and testing sets, using an 80/20 split.
 
-## Outcome Definitions
-
-
 ## Research Objectives:
 - Explore datasets on patients, hospital services, bed allocation, and staffing.
 - Examine patterns in weekly hospital activity and patient characteristics.
